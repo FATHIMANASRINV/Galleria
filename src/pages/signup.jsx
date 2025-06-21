@@ -2,12 +2,14 @@ import React, { useState,useEffect } from 'react';
 import LoginLayout from '../layouts/login';
 import { BASE_URL } from './api/config';
 import { SITE_NAME } from './api/config';
+import usePackages from '../hooks/packages';
 
 
 const Signup = () => {
     useEffect(() => {
         document.title = 'Signup | ' + SITE_NAME;
     }, []);
+    const { packages, loading } = usePackages();
 
     const [sponsor_name, setsponsorname] = useState('');
     const [first_name, setfirstname] = useState('');
@@ -17,21 +19,20 @@ const Signup = () => {
     const [cpassword, setcpassword] = useState('');
     const [errors, setErrors] = useState({});
     const [agree, setAgree] = useState(false);
+    const [package_id, setPackageid] = useState('');
 
-    const handleSignup= async () => {
+    const handleSignup = async (e) => {
         setErrors({});
 
-        if (!agree) {
-            alert('You must agree to the Terms & Conditions.');
-            return;
-        }
+        const buttonName = e.target.name;   
+        const buttonValue = e.target.value; 
         try {
             const response = await fetch(BASE_URL + 'home/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ sponsor_name,first_name, last_name, email, password, cpassword })
+                body: JSON.stringify({ sponsor_name, package_id, first_name, last_name, email, password, cpassword, [buttonName]: buttonValue })
             });
             const result = await response.json();
             console.log(response);
@@ -68,26 +69,44 @@ const Signup = () => {
                     )}
                 </div>
                 <div className="col-span-12 sm:col-span-6">
-                    <input type="text" className="form-control" placeholder="Last Name"  value={last_name} onchange={(e) => setlastname(e.target.value)}/>
+                    <input type="text" className="form-control" placeholder="Last Name"  value={last_name} onChange={(e) => setlastname(e.target.value)}/>
                     {errors.last_name && (
                         <p className="text-danger text-red-600 text-sm mt-1">{errors.last_name}</p>
                     )}
                 </div>
             </div>
             <div className="mb-3">
-                <input type="email" className="form-control" placeholder="Email Address" value={email} onchange={(e) => setemail(e.target.value)} />
+                <input type="email" className="form-control" placeholder="Email Address" value={email} onChange={(e) => setemail(e.target.value)} />
                 {errors.email && (
                     <p className="text-danger text-red-600 text-sm mt-1">{errors.email}</p>
                 )}
             </div>
             <div className="mb-3">
-                <input type="password" className="form-control" placeholder="Password" value={password} onchange={(e) => setpassword(e.target.value)} />
+                <select
+                    className="form-control"
+                    value={package_id}
+                    onChange={e => setPackageid(e.target.value)}
+                    disabled={loading}
+                >
+                    <option value="">-- Select Package --</option>
+                    {loading
+                        ? <option>Loading packages…</option>
+                        : packages.packages.map(pkg => (
+                            <option key={pkg.id} value={pkg.id}>
+                                {pkg.name}
+                            </option>
+                        ))
+                    }
+                </select>
+            </div>
+            <div className="mb-3">
+                <input type="password" className="form-control" placeholder="Password" value={password} onChange={(e) => setpassword(e.target.value)} />
                 {errors.password && (
                     <p className="text-danger text-red-600 text-sm mt-1">{errors.password}</p>
                 )}
             </div>
             <div className="mb-4">
-                <input type="password" className="form-control" placeholder="Confirm Password" value={cpassword} onchange={(e) => setcpassword(e.target.value)} />
+                <input type="password" className="form-control" placeholder="Confirm Password" value={cpassword} onChange={(e) => setcpassword(e.target.value)} />
                 {errors.cpassword && (
                     <p className="text-danger text-red-600 text-sm mt-1">{errors.cpassword}</p>
                 )}
@@ -100,7 +119,9 @@ const Signup = () => {
                 </div>
             </div>
             <div className="mt-4 text-center">
-                <button type="button" className="btn btn-primary mx-auto shadow-2xl" onClick={handleSignup}>Sign up</button>
+                <button type="button" className="btn btn-primary mx-auto shadow-2xl" name="register"
+                    value="free_join"
+                    onClick={(e) => handleSignup(e)}>Sign up</button>
             </div>
             <div className="flex justify-between items-end flex-wrap mt-4">
                 <h6 className="font-medium mb-0">Already have an Account?</h6>
