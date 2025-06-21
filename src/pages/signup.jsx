@@ -91,9 +91,9 @@ const Signup = () => {
                     <option value="">-- Select Package --</option>
                     {loading
                         ? <option>Loading packages…</option>
-                        : packages.packages.map(pkg => (
+                        : packages.map(pkg => (
                             <option key={pkg.id} value={pkg.id}>
-                                {pkg.name}
+                                {pkg.text}
                             </option>
                         ))
                     }
