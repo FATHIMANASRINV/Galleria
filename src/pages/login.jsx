@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoginLayout from '../layouts/login';
 import { BASE_URL } from './api/config';
+import { SITE_NAME } from './api/config';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
+
+    useEffect(() => {
+        document.title = 'Login | '+ SITE_NAME;
+    }, []);
+
+
     const [user_name, setusername] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
@@ -38,13 +46,13 @@ const Login = () => {
             <div className="mb-3">
                 <input type="text" className="form-control" placeholder="User Name" value={user_name} onChange={(e) => setusername(e.target.value)} />
                 {errors.user_name && (
-                    <p className="text-red-600 text-sm mt-1">{errors.user_name}</p>
+                    <p className="text-danger text-red-600 text-sm mt-1">{errors.user_name}</p>
                 )}
             </div>
             <div className="mb-4">
                 <input type="password" className="form-control" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 {errors.password && (
-                    <p className="text-red-600 text-sm mt-1">{errors.password}</p>
+                    <p className="text-danger text-red-600 text-sm mt-1">{errors.password}</p>
                 )}
             </div>
             <div className="flex mt-1 justify-between items-center flex-wrap">
@@ -59,7 +67,7 @@ const Login = () => {
             </div>
             <div className="flex justify-between items-end flex-wrap mt-4">
                 <h6 className="font-medium mb-0">Don't have an Account?</h6>
-                <a href="/register" className="text-primary-500">Create Account</a>
+                <Link to="/signup" className="text-primary-500">Create Account</Link>
             </div>
         </LoginLayout>
     );
