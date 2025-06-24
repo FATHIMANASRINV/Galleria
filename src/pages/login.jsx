@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import {  useNavigate } from 'react-router-dom';
 import LoginLayout from '../layouts/login';
 import { BASE_URL } from './api/config';
 import { SITE_NAME } from './api/config';
 import { Link } from 'react-router-dom';
-
+import { toast } from 'react-toastify';
+import { useUser } from '../context'; 
 const Login = () => {
-
+    const navigate = useNavigate();
+    const { token, user_type } = useUser();
     useEffect(() => {
         document.title = 'Login | '+ SITE_NAME;
-    }, []);
-
-
+        if (token && user_type) {
+            navigate(`/${user_type}Dashboard`);
+        }
+    }, [token, user_type, navigate]);
+    const { login } = useUser();
     const [user_name, setusername] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
@@ -25,16 +30,16 @@ const Login = () => {
                 body: JSON.stringify({ user_name, password })
             });
             const result = await response.json();
-            console.log(response);
-            if (response.success) {
-                localStorage.setItem('token', result.token);
-                window.location.href = '/dashboard';
+            if (result.success) {
+                login(result.data.token, result.data.user_type);
+                window.location.href = result.data.user_type +'Dashboard';
             } else {
                 if (result.error_msg) {
                     setErrors(result.error_msg); 
                 } else {
-                    alert(result.message || 'Login failed');
-                }            }
+                    toast.error(result.msg);
+                }            
+            }
         } catch (error) {
             alert('Something went wrong');
             console.error(error);
@@ -72,5 +77,4 @@ const Login = () => {
         </LoginLayout>
     );
 };
-
 export default Login; 
