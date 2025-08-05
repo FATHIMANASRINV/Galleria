@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Menu = () => {
+    const [openMenus, setOpenMenus] = useState({});
+
+    const toggleMenu = (menuKey) => {
+        setOpenMenus(prev => ({
+            ...prev,
+            [menuKey]: !prev[menuKey]
+        }));
+    };
+
+    const isOpen = (key) => openMenus[key];
     return (
         <nav className="pc-sidebar">
             <div className="navbar-wrapper">
@@ -24,42 +34,19 @@ const Menu = () => {
                                     <span className="pc-mtext">Dashboard</span>
                                 </Link>
                             </li>
-                           
-                            <li className="pc-item pc-hasmenu">
-                                <a href="#!" className="pc-link"><span className="pc-micon"> <i data-feather="align-right"></i> </span><span
-                                    className="pc-mtext">Menu levels</span><span className="pc-arrow"><i className="ti ti-chevron-right"></i></span></a>
-                                <ul className="pc-submenu">
-                                    <li className="pc-item"><a className="pc-link" href="#!">Level 2.1</a></li>
-                                    <li className="pc-item pc-hasmenu">
-                                        <a href="#!" className="pc-link">Level 2.2<span className="pc-arrow"><i className="ti ti-chevron-right"></i></span></a>
-                                        <ul className="pc-submenu">
-                                            <li className="pc-item"><a className="pc-link" href="#!">Level 3.1</a></li>
-                                            <li className="pc-item"><a className="pc-link" href="#!">Level 3.2</a></li>
-                                            <li className="pc-item pc-hasmenu">
-                                                <a href="#!" className="pc-link">Level 3.3<span className="pc-arrow"><i className="ti ti-chevron-right"></i></span></a>
-                                                <ul className="pc-submenu">
-                                                    <li className="pc-item"><a className="pc-link" href="#!">Level 4.1</a></li>
-                                                    <li className="pc-item"><a className="pc-link" href="#!">Level 4.2</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li className="pc-item pc-hasmenu">
-                                        <a href="#!" className="pc-link">Level 2.3<span className="pc-arrow"><i className="ti ti-chevron-right"></i></span></a>
-                                        <ul className="pc-submenu">
-                                            <li className="pc-item"><a className="pc-link" href="#!">Level 3.1</a></li>
-                                            <li className="pc-item"><a className="pc-link" href="#!">Level 3.2</a></li>
-                                            <li className="pc-item pc-hasmenu">
-                                                <a href="#!" className="pc-link">Level 3.3<span className="pc-arrow"><i className="ti ti-chevron-right"></i></span></a>
-                                                <ul className="pc-submenu">
-                                                    <li className="pc-item"><a className="pc-link" href="#!">Level 4.1</a></li>
-                                                    <li className="pc-item"><a className="pc-link" href="#!">Level 4.2</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
+                        <li class="pc-item pc-hasmenu">
+                            <a href="#!" class="pc-link"><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span><span
+                                class="pc-mtext">Menu levels</span></a>
+                            <ul class="pc-submenu">
+                                <li class="pc-item"><a class="pc-link" href="#!">Level 2.1</a></li>
+                                <li class="pc-item pc-hasmenu">
+                                    <a href="#!" class="pc-link">Level 2.2</a>
+                                </li>
+                                <li class="pc-item pc-hasmenu">
+                                    <a href="#!" class="pc-link">Level 2.3</a>
+                                </li>
+                            </ul>
+                        </li>
                             <li className="pc-item">
                                 <Link to="/logout" className="pc-link">
                                     <span className="pc-micon">
